@@ -1,5 +1,7 @@
+import { client } from "@/sanity/lib/client";
 import SearchForm from "./_components/search-form";
-import StartupCard from "./_components/startup-card";
+import StartupCard, { StartupTypeCard } from "./_components/startup-card";
+import { STARTUPS_QUERY } from "@/sanity/lib/queries";
 
 export default async function Home({
   searchParams,
@@ -8,22 +10,7 @@ export default async function Home({
 }) {
   const query = (await searchParams).query;
 
-  const posts = [
-    {
-      _id: "1",
-      title: "Startup 1",
-      category: "Technology",
-      image: "https://vichinth.com/wp-content/uploads/2018/07/startup-2.jpg",
-      author: {
-        name: "Author 1",
-        _id: "1",
-        image: "https://reqres.in/img/faces/1-image.jpg",
-      },
-      description: "This is the description of the startup 1",
-      views: 100,
-      _createdAt: "2022-01-01",
-    },
-  ];
+  const posts = await client.fetch(STARTUPS_QUERY);
 
   return (
     <div>
@@ -51,7 +38,9 @@ export default async function Home({
               <StartupCard key={post?._id} post={post} />
             ))
           ) : (
-            <p className="no-results">No startups found</p>
+            <li>
+              <p className="no-results">No startups found</p>
+            </li>
           )}
         </ul>
       </section>
